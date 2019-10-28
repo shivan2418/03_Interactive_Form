@@ -1,6 +1,11 @@
-//focus the name input box
-$('#name').focus();
-
+// code that runs when the page is loaded
+    //focus the name input box
+    $('#name').focus();
+    //Set focus to credit card
+    select_credit_card();
+    // disable select payment option in box.
+    $('#payment option[value="select method"]').attr('disabled',true);
+    
 // hide the other title
 const othertitle = $('#other-title');
 othertitle.hide();
@@ -55,6 +60,27 @@ $('.activities').on('click change', function (event) {
     //update the total cost
     update_total_cost();
 
+});
+
+
+// handle clicks in the payment methods
+$('#payment').on('change click',function(){
+
+    let value = $(this).val();
+
+    if (value === 'Credit Card'){
+        select_credit_card();
+    }
+    else if (value === 'Bitcoin'){
+        select_bitcoin();
+    }else if (value === 'PayPal'){
+        select_paypal();
+
+    }
+    // All other options are invalid, 
+    else {
+            null;
+    }
 });
 
 function update_total_cost() {
@@ -138,6 +164,28 @@ function prompt_to_select_color() {
     $('#color').hide();
     //Tell user to select a color
     $('#colors-js-puns label').text('Select a theme');
+
+}
+
+
+function select_paypal(){
+    $('#payment').val('PayPal').attr('selected',true);
+    $('#bitcoin').hide();
+    $('#paypal').show();
+
+}
+
+function select_credit_card(){
+    $('#payment').val('Credit Card').attr('selected',true);
+    // hide paybal and bitcoin info
+    $('#paypal').hide();
+    $('#bitcoin').hide();
+}
+
+function select_bitcoin(){
+    $('#payment').val('Bitcoin').attr('selected',true);
+    $('#bitcoin').show();
+    $('#paypal').hide();
 
 }
 
