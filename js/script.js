@@ -1,6 +1,8 @@
 //focus the name input box
 $('#name').focus();
 
+console.log($('.activities input'));
+
 // hide the other title
 const othertitle = $('#other-title');
 othertitle.hide();
@@ -32,8 +34,19 @@ $('#design').on('click change', function (event) {
     else {
         prompt_to_select_color();
     }
-
 });
+
+
+// handle changes in the Register for Activities
+$('.activities').on('click change',function(event){
+ 
+    // iterate over all the boxes and disable those that have the same time as the one we just checked
+
+    $('.activities input').each()
+
+    
+
+}
 
 function show_color_options(list_of_colors) {
     //Shows the colors in the list of colors, hides all other//
@@ -42,22 +55,44 @@ function show_color_options(list_of_colors) {
     $('#colors-js-puns label').text('Colors:');
 
     for (let i = 0; i < menu_options.length; i++) {
-
-        let allowed = (list_of_colors.indexOf(menu_options[i].value)>-1)
-
-        console.log(`${menu_options[i].value} ${allowed}`)
+        let allowed = (list_of_colors.indexOf(menu_options[i].value) > -1)
+        //console.log(`${menu_options[i].value} ${allowed}`)
         if (allowed) {
-           $(menu_options[i]).show();
-        } else{
+            $(menu_options[i]).show();
+        } else {
             $(menu_options[i]).hide();
         }
     }
 };
 
 function prompt_to_select_color() {
+    // When the user has not selected a design show this.
+
+
     // hide the color selection
     $('#color').hide();
     //Tell user to select a color
     $('#colors-js-puns label').text('Select a theme');
 
 }
+
+class Workshop {
+    constructor(title, timeslot, price = 100) {
+        this.title = title;
+        this.price = price;
+        this.timeslot = timeslot;
+    }
+}
+
+function create_workshops() {
+    // Create a list of workshop instances.
+    let workshops = [new Workshop('JavaScript Frameworks Workshop', 1),
+    new Workshop('JavaScript Libraries Workshop', 2),
+    new Workshop('Express Workshop', 1),
+    new Workshop('Node.js Workshop', 2),
+    new Workshop('Build tools Workshop', 3),
+    new Workshop('npm Workshop', 4)];
+
+    return workshops;
+}
+
