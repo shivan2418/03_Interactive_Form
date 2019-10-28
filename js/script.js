@@ -1,8 +1,6 @@
 //focus the name input box
 $('#name').focus();
 
-console.log($('.activities input'));
-
 // hide the other title
 const othertitle = $('#other-title');
 othertitle.hide();
@@ -38,14 +36,50 @@ $('#design').on('click change', function (event) {
 
 
 // handle changes in the Register for Activities
-$('.activities').on('click change',function(event){
- 
-    // iterate over all the boxes and disable those that have the same time as the one we just checked
+$('.activities').on('click change', function (event) {
 
-    $('.activities input').each()
+    // only do the check for date if the element we just checked has a date
+    let time_of_workshop = $(event.target).data('day-and-time');
 
-    
+    if (time_of_workshop !== undefined) {
+        // iterate over all the boxes and disable those that have the same time as the one we just checked
+        name = $(event.target).prop('name');
+        // if a box was enabled, do one kind of check
+        if ($(event.target).prop('checked') === true) {
+            disable_conflicting_workshops(name, time_of_workshop);
+        } else if ($(event.target).prop('checked') === false) {
+            free_up_workshops(name, time_of_workshop);
+        }
+    }
+});
 
+function disable_conflicting_workshops(name, time) {
+    //takes the time of a workshop as input and disables all workshops with the same time
+    $('.activities input').each(function () {
+
+        if ($(this).data('day-and-time') === time) {
+            console.log(`This conflicts ${$(this).data('day-and-time')}`);
+
+            // disable the checkbox that has the same time, unless its the same as the checkbox clicked.
+            if ($(this).prop('name') !== name) {
+                $(this).prop('disabled', true);
+            }
+        }
+    });
+}
+function free_up_workshops(name, time) {
+    //takes the time of a workshop as input and disables all workshops with the same time
+    $('.activities input').each(function () {
+
+        if ($(this).data('day-and-time') === time) {
+            console.log(`This conflicts ${$(this).data('day-and-time')}`);
+
+            // disable the checkbox that has the same time, unless its the same as the checkbox clicked.
+            if ($(this).prop('name') !== name) {
+                $(this).prop('disabled', false);
+            }
+        }
+    });
 }
 
 function show_color_options(list_of_colors) {
