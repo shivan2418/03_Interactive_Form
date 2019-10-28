@@ -197,3 +197,8 @@ option {
 		clear: both;
 	}
 }
+
+.cost{
+	margin-top: 20px;
+	font-weight: bold;
+}

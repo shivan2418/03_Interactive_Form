@@ -51,14 +51,45 @@ $('.activities').on('click change', function (event) {
             free_up_workshops(name, time_of_workshop);
         }
     }
+
+    //update the total cost
+    update_total_cost();
+
 });
+
+function update_total_cost() {
+    // if there is no element below the checkboxes then create it
+    if ($('#total_cost').length === 0) {
+        let total_cost = document.createElement('label');
+        total_cost.id = 'total_cost';
+        total_cost.textContent = '$0';
+        total_cost.className='cost';
+        console.log(total_cost);
+        $('.activities').append(total_cost);
+    }
+
+    // calculate the total price by iterating over the checkboxes and added up those that are checked
+    let cost = 0;
+    $('.activities input').each(function () {
+        let checkbox = $(this);
+        let cst = checkbox.data('cost');
+        console.log(cst);
+        if ( checkbox.prop('checked') === true ) {
+            cost += parseFloat(cst.replace('$', ''));
+        }
+    });
+
+    // set the value of the total cost field to the cost
+    $('#total_cost').prop('textContent',`$${cost}`);
+
+}
 
 function disable_conflicting_workshops(name, time) {
     //takes the time of a workshop as input and disables all workshops with the same time
     $('.activities input').each(function () {
 
         if ($(this).data('day-and-time') === time) {
-            console.log(`This conflicts ${$(this).data('day-and-time')}`);
+            //console.log(`This conflicts ${$(this).data('day-and-time')}`);
 
             // disable the checkbox that has the same time, unless its the same as the checkbox clicked.
             if ($(this).prop('name') !== name) {
