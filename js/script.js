@@ -1,16 +1,5 @@
 // code that runs when the page is loaded
-//focus the name input box
-$('#name').focus();
-//Set focus to credit card
-select_credit_card();
-// disable select payment option in box.
-$('#payment option[value="select method"]').attr('disabled', true);
-
-// hide the other title
-const othertitle = $('#other-title');
-othertitle.hide();
-
-prompt_to_select_color();
+run_at_startup();
 
 // handle clicks on the title select menu
 $('#title').on('click', function (event) {
@@ -32,20 +21,63 @@ $('#design').on('click change', function (event) {
     else if (event.target.value === 'heart js') {
         let can_choose_colors = ['tomato', 'steelblue', 'dimgrey'];
         show_color_options(can_choose_colors);
-
     }
     else {
         prompt_to_select_color();
     }
 });
 
+// handle clicks and changes to the register button. It was not given an id, but there are no longer buttons on page so its "good enough".
+$('button').on('click change', function (event) {
+    event.preventDefault();
+    // Check if all validation is complete
+    let name = $('#name');
 
+    if (validate_name(name.val()) === false) {
+        console.log($('input #name'));
+        create_or_show_warning('Please enter a name', name);
+    } else {
+        hide_warning(name);
+    }
+    let mail = $('#mail');
+    if (validate_email(mail.val()) === false) {
+        create_or_show_warning("Invalid email", mail);
+    } else {
+        hide_warning(mail);
+    }
+    let activities = $('.activities');
+    if (validate_registered_for_at_least_one() === false) {
+        create_or_show_warning('Please select at least one activity', activities);
+    } else {
+        hide_warning(activities);
+    }
+    // check only if credit card is selected
+    let payment_menu = $('#payment')
+    if (payment_menu.val() === 'Credit Card') {
+        let card_number = $('#cc-num');
+        if (validate_credit_card(card_number.val()) === false) {
+            create_or_show_warning('Invalid credit card number', card_number);
+        } else{
+            hide_warning(card_number);
+        }
+        let zip = $('#zip');
+        if (validate_zip_code(zip.val()) === false) {
+            create_or_show_warning('Invaled Zip code', zip);
+        } else{
+            hide_warning(zip);
+        }
+        let cvv = $('#cvv');
+        if (validate_cvv(cvv.val()) === false) {
+            create_or_show_warning('Invalid CVV', cvv);
+        }else{
+            hide_warning(cvv);
+        }
+    }
+});
 // handle changes in the Register for Activities
 $('.activities').on('click change', function (event) {
-
     // only do the check for date if the element we just checked has a date
     let time_of_workshop = $(event.target).data('day-and-time');
-
     if (time_of_workshop !== undefined) {
         // iterate over all the boxes and disable those that have the same time as the one we just checked
         name = $(event.target).prop('name');
@@ -56,18 +88,13 @@ $('.activities').on('click change', function (event) {
             free_up_workshops(name, time_of_workshop);
         }
     }
-
     //update the total cost
     update_total_cost();
 
 });
-
-
 // handle clicks in the payment methods
 $('#payment').on('change click', function () {
-
     let value = $(this).val();
-
     if (value === 'Credit Card') {
         select_credit_card();
     }
@@ -83,35 +110,91 @@ $('#payment').on('change click', function () {
     }
 });
 
+function create_all_warnings() {
+    //creates all the all the warnings that we may want to show, then hide them at once.
 
+
+
+}
+function hide_warning(attachto) {
+    //remove the label
+    $(attachto).prev('.error-text').hide();
+    // remove red around the element
+    $(attachto).removeClass('error');
+}
+function create_or_show_warning(text, attachto) {
+    // a helper function for creating a html element for showing warnings and makes the element border red
+    // only create a warning if there is not already one in place
+    if (attachto.prev('.error-text').length < 1) {
+        let element = document.createElement('label')
+        element.textContent = text;
+
+        // make the text red
+        element.className = 'error-text';
+        // make the border around the textfield red
+        $(attachto).addClass('error');
+
+        // attach to element ot what was passed to it
+        attachto.before(element);
+
+
+    }
+    // if the element already exsists, just show it
+    else if (attachto.prev('.error-text').length >= 1) {
+        attachto.prev('.error-text').show();
+    }
+
+
+
+}
+function check_all_validation() {
+    // go over all the things that can be validated and display error messages where things are not correct
+
+    // check for failed validation
+    // validation ok
+    if (validate_email($('mail').val())) {
+        null;
+        //validation ok
+    } else {
+
+    }
+}
 function validate_email(email) {
     //returns true if the email is valid
     return /^[^@]+@[^@.]+\.[a-z]+$/i.test(email);
 }
-function validate_registered_for_at_least_one(){
+function validate_registered_for_at_least_one() {
     // check that the user has checked at least one box
-    $('.activities').each( function(){
-        if ( $(this).attr('checked')===true  ){
-            // return true, this breaks the loop
+    let signed_up = false
+
+    $('.activities input').each(function () {
+        console.log($(this).prop('checked'));
+        if ($(this).prop('checked') === true) {
+            // return true, this breaks the loop, but only into the other method, hence the signed_up flag.
+            signed_up = true
             return true
         }
+
     });
-    // we only reach this point if none were checked.
-    return false
+
+    if (signed_up == false) {
+        return false;
+    }
+
 }
 function validate_cvv(cvv) {
-    return /[\d]{3}/;
+    return /^\d{3}$/.test(cvv);
 }
 function validate_name(name) {
     //returns true if there is at least one word character, case insensitive
-    return /[a-z]+i/.test(name);
+    return /^[a-z]+/.test(name);
 }
 function validate_credit_card(credit_card) {
-    return /[\d]{13-16}/.test(credit_card);
+    return /^[\d]{13-16}$/.test(credit_card);
 }
 function validate_zip_code(zipcode) {
     //zip code must be 5 digits
-    /[\d]{5}/.test(zipcode);
+   return /^\d{5}$/.test(zipcode);
 }
 function update_total_cost() {
     // if there is no element below the checkboxes then create it
@@ -139,7 +222,6 @@ function update_total_cost() {
     $('#total_cost').prop('textContent', `$${cost}`);
 
 }
-
 function disable_conflicting_workshops(name, time) {
     //takes the time of a workshop as input and disables all workshops with the same time
     $('.activities input').each(function () {
@@ -168,7 +250,6 @@ function free_up_workshops(name, time) {
         }
     });
 }
-
 function show_color_options(list_of_colors) {
     //Shows the colors in the list of colors, hides all other//
     const menu_options = $('#color option');
@@ -185,7 +266,6 @@ function show_color_options(list_of_colors) {
         }
     }
 };
-
 function prompt_to_select_color() {
     // When the user has not selected a design show this.
 
@@ -217,24 +297,20 @@ function select_bitcoin() {
     $('#paypal').hide();
     $('#credit-card').hide();
 }
+function run_at_startup() {
+    //focus the name input box
+    $('#name').focus();
+    //Set focus to credit card
+    select_credit_card();
+    // disable select payment option in box.
+    $('#payment option[value="select method"]').attr('disabled', true);
 
-class Workshop {
-    constructor(title, timeslot, price = 100) {
-        this.title = title;
-        this.price = price;
-        this.timeslot = timeslot;
-    }
+    // hide the other title
+    const othertitle = $('#other-title');
+    othertitle.hide();
+    //Create all the warning that we may want to show later
+    create_all_warnings();
+
+    prompt_to_select_color();
+
 }
-
-function create_workshops() {
-    // Create a list of workshop instances.
-    let workshops = [new Workshop('JavaScript Frameworks Workshop', 1),
-    new Workshop('JavaScript Libraries Workshop', 2),
-    new Workshop('Express Workshop', 1),
-    new Workshop('Node.js Workshop', 2),
-    new Workshop('Build tools Workshop', 3),
-    new Workshop('npm Workshop', 4)];
-
-    return workshops;
-}
-

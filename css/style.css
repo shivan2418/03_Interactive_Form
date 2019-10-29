@@ -202,3 +202,11 @@ option {
 	margin-top: 20px;
 	font-weight: bold;
 }
+
+.error{
+	border-color:#F00;
+}
+
+.error-text{
+	color: #F00;
+}
