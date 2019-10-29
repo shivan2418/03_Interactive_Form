@@ -1,11 +1,11 @@
 // code that runs when the page is loaded
-    //focus the name input box
-    $('#name').focus();
-    //Set focus to credit card
-    select_credit_card();
-    // disable select payment option in box.
-    $('#payment option[value="select method"]').attr('disabled',true);
-    
+//focus the name input box
+$('#name').focus();
+//Set focus to credit card
+select_credit_card();
+// disable select payment option in box.
+$('#payment option[value="select method"]').attr('disabled', true);
+
 // hide the other title
 const othertitle = $('#other-title');
 othertitle.hide();
@@ -64,32 +64,62 @@ $('.activities').on('click change', function (event) {
 
 
 // handle clicks in the payment methods
-$('#payment').on('change click',function(){
+$('#payment').on('change click', function () {
 
     let value = $(this).val();
 
-    if (value === 'Credit Card'){
+    if (value === 'Credit Card') {
         select_credit_card();
     }
-    else if (value === 'Bitcoin'){
+    else if (value === 'Bitcoin') {
         select_bitcoin();
-    }else if (value === 'PayPal'){
+    } else if (value === 'PayPal') {
         select_paypal();
 
     }
     // All other options are invalid, 
     else {
-            null;
+        null;
     }
 });
 
+
+function validate_email(email) {
+    //returns true if the email is valid
+    return /^[^@]+@[^@.]+\.[a-z]+$/i.test(email);
+}
+function validate_registered_for_at_least_one(){
+    // check that the user has checked at least one box
+    $('.activities').each( function(){
+        if ( $(this).attr('checked')===true  ){
+            // return true, this breaks the loop
+            return true
+        }
+    });
+    // we only reach this point if none were checked.
+    return false
+}
+function validate_cvv(cvv) {
+    return /[\d]{3}/;
+}
+function validate_name(name) {
+    //returns true if there is at least one word character, case insensitive
+    return /[a-z]+i/.test(name);
+}
+function validate_credit_card(credit_card) {
+    return /[\d]{13-16}/.test(credit_card);
+}
+function validate_zip_code(zipcode) {
+    //zip code must be 5 digits
+    /[\d]{5}/.test(zipcode);
+}
 function update_total_cost() {
     // if there is no element below the checkboxes then create it
     if ($('#total_cost').length === 0) {
         let total_cost = document.createElement('label');
         total_cost.id = 'total_cost';
         total_cost.textContent = '$0';
-        total_cost.className='cost';
+        total_cost.className = 'cost';
         console.log(total_cost);
         $('.activities').append(total_cost);
     }
@@ -100,13 +130,13 @@ function update_total_cost() {
         let checkbox = $(this);
         let cst = checkbox.data('cost');
         console.log(cst);
-        if ( checkbox.prop('checked') === true ) {
+        if (checkbox.prop('checked') === true) {
             cost += parseFloat(cst.replace('$', ''));
         }
     });
 
     // set the value of the total cost field to the cost
-    $('#total_cost').prop('textContent',`$${cost}`);
+    $('#total_cost').prop('textContent', `$${cost}`);
 
 }
 
@@ -168,25 +198,24 @@ function prompt_to_select_color() {
 }
 
 
-function select_paypal(){
-    $('#payment').val('PayPal').attr('selected',true);
+function select_paypal() {
+    $('#payment').val('PayPal').attr('selected', true);
     $('#bitcoin').hide();
     $('#paypal').show();
-
+    $('#credit-card').hide();
 }
-
-function select_credit_card(){
-    $('#payment').val('Credit Card').attr('selected',true);
+function select_credit_card() {
+    $('#payment').val('Credit Card').attr('selected', true);
     // hide paybal and bitcoin info
     $('#paypal').hide();
     $('#bitcoin').hide();
+    $('#credit-card').show();
 }
-
-function select_bitcoin(){
-    $('#payment').val('Bitcoin').attr('selected',true);
+function select_bitcoin() {
+    $('#payment').val('Bitcoin').attr('selected', true);
     $('#bitcoin').show();
     $('#paypal').hide();
-
+    $('#credit-card').hide();
 }
 
 class Workshop {
