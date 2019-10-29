@@ -103,7 +103,7 @@ function validate_fields_and_show_warnings() {
         }
         let zip = $('#zip');
         if (validate_zip_code(zip.val()) === false) {
-            create_or_show_warning('Invalied Zip code', zip);
+            create_or_show_warning('Invalid zip code', zip);
         } else {
             hide_warning(zip);
         }
