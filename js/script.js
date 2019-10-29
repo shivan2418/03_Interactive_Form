@@ -31,48 +31,8 @@ $('#design').on('click change', function (event) {
 $('button').on('click change', function (event) {
     event.preventDefault();
     // Check if all validation is complete
-    let name = $('#name');
+    validate_fields_and_show_warnings();
 
-    if (validate_name(name.val()) === false) {
-        console.log($('input #name'));
-        create_or_show_warning('Please enter a name', name);
-    } else {
-        hide_warning(name);
-    }
-    let mail = $('#mail');
-    if (validate_email(mail.val()) === false) {
-        create_or_show_warning("Invalid email", mail);
-    } else {
-        hide_warning(mail);
-    }
-    let activities = $('.activities');
-    if (validate_registered_for_at_least_one() === false) {
-        create_or_show_warning('Please select at least one activity', activities);
-    } else {
-        hide_warning(activities);
-    }
-    // check only if credit card is selected
-    let payment_menu = $('#payment')
-    if (payment_menu.val() === 'Credit Card') {
-        let card_number = $('#cc-num');
-        if (validate_credit_card(card_number.val()) === false) {
-            create_or_show_warning('Invalid credit card number', card_number);
-        } else{
-            hide_warning(card_number);
-        }
-        let zip = $('#zip');
-        if (validate_zip_code(zip.val()) === false) {
-            create_or_show_warning('Invaled Zip code', zip);
-        } else{
-            hide_warning(zip);
-        }
-        let cvv = $('#cvv');
-        if (validate_cvv(cvv.val()) === false) {
-            create_or_show_warning('Invalid CVV', cvv);
-        }else{
-            hide_warning(cvv);
-        }
-    }
 });
 // handle changes in the Register for Activities
 $('.activities').on('click change', function (event) {
@@ -110,12 +70,52 @@ $('#payment').on('change click', function () {
     }
 });
 
-function create_all_warnings() {
-    //creates all the all the warnings that we may want to show, then hide them at once.
+function validate_fields_and_show_warnings() {
 
+    let name = $('#name');
 
-
+    if (validate_name(name.val()) === false) {
+        console.log($('input #name'));
+        create_or_show_warning('Please enter a name', name);
+    } else {
+        hide_warning(name);
+    }
+    let mail = $('#mail');
+    if (validate_email(mail.val()) === false) {
+        create_or_show_warning("Invalid email", mail);
+    } else {
+        hide_warning(mail);
+    }
+    let activities = $('.activities');
+    if (validate_registered_for_at_least_one() === false) {
+        create_or_show_warning('Please select at least one activity', activities);
+    } else {
+        hide_warning(activities);
+    }
+    // check only if credit card is selected
+    let payment_menu = $('#payment')
+    if (payment_menu.val() === 'Credit Card') {
+        let card_number = $('#cc-num');
+        if (validate_credit_card(card_number.val()) === false) {
+            create_or_show_warning('Invalid credit card number', card_number);
+        } else {
+            hide_warning(card_number);
+        }
+        let zip = $('#zip');
+        if (validate_zip_code(zip.val()) === false) {
+            create_or_show_warning('Invalied Zip code', zip);
+        } else {
+            hide_warning(zip);
+        }
+        let cvv = $('#cvv');
+        if (validate_cvv(cvv.val()) === false) {
+            create_or_show_warning('Invalid CVV', cvv);
+        } else {
+            hide_warning(cvv);
+        }
+    }
 }
+
 function hide_warning(attachto) {
     //remove the label
     $(attachto).prev('.error-text').hide();
@@ -142,6 +142,7 @@ function create_or_show_warning(text, attachto) {
     // if the element already exsists, just show it
     else if (attachto.prev('.error-text').length >= 1) {
         attachto.prev('.error-text').show();
+        attachto.addClass('error');
     }
 
 
@@ -194,7 +195,7 @@ function validate_credit_card(credit_card) {
 }
 function validate_zip_code(zipcode) {
     //zip code must be 5 digits
-   return /^\d{5}$/.test(zipcode);
+    return /^\d{5}$/.test(zipcode);
 }
 function update_total_cost() {
     // if there is no element below the checkboxes then create it
@@ -308,9 +309,6 @@ function run_at_startup() {
     // hide the other title
     const othertitle = $('#other-title');
     othertitle.hide();
-    //Create all the warning that we may want to show later
-    create_all_warnings();
-
     prompt_to_select_color();
 
 }
