@@ -5,10 +5,10 @@ run_at_startup();
 $('#title').on('click', function (event) {
     if (event.target.value === 'other') {
         // show the other input field 
-        othertitle.show();
+        $('#other-title').show();
     }
     else {
-        othertitle.hide();
+        $('#other-title').hide();
     }
 });
 
@@ -17,14 +17,24 @@ $('#design').on('click change', function (event) {
     if (event.target.value === 'js puns') {
         let can_choose_colors = ['cornflowerblue', 'darkslategrey', 'gold'];
         show_color_options(can_choose_colors);
+
+        
+
+        console.log('changed options')
+
     }
     else if (event.target.value === 'heart js') {
         let can_choose_colors = ['tomato', 'steelblue', 'dimgrey'];
         show_color_options(can_choose_colors);
+        console.log('changed options')
+
     }
     else {
         prompt_to_select_color();
     }
+
+
+
 });
 
 // handle clicks and changes to the register button. It was not given an id, but there are no longer buttons on page so its "good enough".
@@ -258,7 +268,7 @@ function show_color_options(list_of_colors) {
     $('#colors-js-puns label').text('Colors:');
 
     for (let i = 0; i < menu_options.length; i++) {
-        let allowed = (list_of_colors.indexOf(menu_options[i].value) > -1)
+        let allowed = (list_of_colors.indexOf(menu_options[i].value) > -1) // index Of returns -1 if the color is not found 
         //console.log(`${menu_options[i].value} ${allowed}`)
         if (allowed) {
             $(menu_options[i]).show();
@@ -266,6 +276,8 @@ function show_color_options(list_of_colors) {
             $(menu_options[i]).hide();
         }
     }
+    // this changed the options, now set the value of that is selected to the first item in the list
+    $('select#color').val(list_of_colors[0])
 };
 function prompt_to_select_color() {
     // When the user has not selected a design show this.
