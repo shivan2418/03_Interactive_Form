@@ -17,17 +17,10 @@ $('#design').on('click change', function (event) {
     if (event.target.value === 'js puns') {
         let can_choose_colors = ['cornflowerblue', 'darkslategrey', 'gold'];
         show_color_options(can_choose_colors);
-
-        
-
-        console.log('changed options')
-
     }
     else if (event.target.value === 'heart js') {
         let can_choose_colors = ['tomato', 'steelblue', 'dimgrey'];
         show_color_options(can_choose_colors);
-        console.log('changed options')
-
     }
     else {
         prompt_to_select_color();
@@ -201,7 +194,12 @@ function validate_name(name) {
     return /^[a-z]+/.test(name);
 }
 function validate_credit_card(credit_card) {
-    return /^[\d]{13-16}$/.test(credit_card);
+    // remove all the spaces
+    credit_card = credit_card.replace(/\s+/g, '')
+    console.log(credit_card)
+
+
+    return /^[\d]{13,16}$/.test(credit_card);
 }
 function validate_zip_code(zipcode) {
     //zip code must be 5 digits
