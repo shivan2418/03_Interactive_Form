@@ -196,9 +196,6 @@ function validate_name(name) {
 function validate_credit_card(credit_card) {
     // remove all the spaces
     credit_card = credit_card.replace(/\s+/g, '')
-    console.log(credit_card)
-
-
     return /^[\d]{13,16}$/.test(credit_card);
 }
 function validate_zip_code(zipcode) {
